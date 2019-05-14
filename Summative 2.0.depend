@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1557856751 source:p:\computer science\allegro\summative 2.0\allegro initialize.cpp
+	<allegro5/allegro.h>
+	<allegro5/allegro_native_dialog.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	"setup.h"
+	<stdio.h>
+
+1557856838 p:\computer science\allegro\summative 2.0\setup.h
+
+1557859095 source:p:\computer science\allegro\summative 2.0\functions initialize.cpp
+	<allegro5/allegro.h>
+	<allegro5/allegro_native_dialog.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<stdio.h>
+	"setup.h"
+
+1557858412 source:p:\computer science\allegro\summative 2.0\images initialize.cpp
+	<allegro5/allegro.h>
+	<allegro5/allegro_native_dialog.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	"setup.h"
+	<stdio.h>
+
+1557857685 source:p:\computer science\allegro\summative 2.0\main.cpp
+	<allegro5/allegro.h>
+	<allegro5/allegro_native_dialog.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<stdio.h>
+	"setup.h"
+
