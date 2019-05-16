@@ -30,6 +30,7 @@ int direction;
 
 bool doexit = false;
 bool moving = false;
+bool has_hatch_1 = false;
 
 
 // Initialize display
@@ -37,7 +38,7 @@ ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *background;
 Image spaceship;
 Image astronaut[12];
-ALLEGRO_BITMAP *hatch;
+Image hatch;
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT event;
 ALLEGRO_TIMER *timer;
@@ -46,10 +47,12 @@ int main_innitialize();
 int images_innitialize();
 int functions_innitialize();
 void draw_background();
-void draw_spaceship(Image &a);
-void draw_hatch();
-void draw_astronaut(Image astronaut[], int posX, int posY, int frame, int direction);
+void draw_image(Image &a);
+void draw_astronaut(Image astronaut[], int frame, int direction);
 bool check_in_bounds(int &posX, int &posY);
+bool isCollision(Image a, Image b);
+void drawBoundingBox(Image image);
+void calcBounds(Image &a);
 
 // NOTE: argc, argv parameters are required.
 int main(int argc, char *argv[]) {
@@ -61,6 +64,11 @@ int main(int argc, char *argv[]) {
 	images_innitialize();
 
     al_start_timer(timer);
+
+    for(int i = 0; i < 12; i ++){
+        astronaut[i].x = 320;
+        astronaut[i].y = 240;
+    }
 
 	while (!doexit){
         al_wait_for_event(event_queue, &event);
@@ -89,6 +97,16 @@ int main(int argc, char *argv[]) {
                     moving = true;
                     direction = 3;
                     break;
+                case ALLEGRO_KEY_SPACE:
+                    if (isCollision(astronaut[frame], spaceship) && has_hatch_1){
+                        hatch.x = spaceship.x + 10;
+                        hatch.y = spaceship.y + 30;
+                        has_hatch_1 = false;
+                    }
+                    else if (isCollision(astronaut[frame], hatch)){
+                        has_hatch_1 = !has_hatch_1;
+                    }
+                    break;
             }
       	}
 
@@ -97,20 +115,38 @@ int main(int argc, char *argv[]) {
             dy = 0;
             moving = false;
         }
+
         else if(event.type == ALLEGRO_EVENT_TIMER){
-            if (check_in_bounds(astronautX, astronautY)){
-                astronautX += dx;
-                astronautY += dy;
+            if (check_in_bounds(astronaut[frame].x, astronaut[frame].y)){
+                for(int i = 0; i < 12; i++){
+                    astronaut[i].x += dx;
+                    astronaut[i].y += dy;
+                }
+            }
+
+            printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
+            calcBounds(astronaut[frame]);
+            calcBounds(hatch);
+
+            if (has_hatch_1){
+                hatch.x = astronaut[frame].x;
+                hatch.y = astronaut[frame].y;
             }
 
             draw_background();
-            draw_spaceship(spaceship);
-            draw_hatch();
+            draw_image(spaceship);
+            draw_image(hatch);
+            //printf("before\n");
+            drawBoundingBox(astronaut[frame]);
+            //printf("middle\n");
+            drawBoundingBox(hatch);
+            //printf("end\n");
             if (!moving){
                 frame = 0;
             }
 
-            draw_astronaut(astronaut, astronautX, astronautY, frame, direction);
+            draw_astronaut(astronaut, frame, direction);
+            printf("width:%d\n", al_get_bitmap_width(astronaut[frame].bitmap));
             al_flip_display();
             counter ++;
             counter %= 60;
