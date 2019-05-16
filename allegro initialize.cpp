@@ -56,6 +56,12 @@ int main_innitialize() {
         return -1;
     }
 
+    if (!al_init_primitives_addon()) {
+    	al_show_native_message_box(display, "Error", "Error", "Failed to initialize primatives addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+    	return -1;
+	}
+
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
  	al_register_event_source(event_queue, al_get_keyboard_event_source());
