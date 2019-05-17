@@ -38,22 +38,30 @@ void draw_astronaut(Image astronaut[], int frame, int direction){
 }
 
 
-bool check_in_bounds(int &posX, int &posY){
+bool check_in_bounds(Image astronaut[]){
 
-        if (posX <= 0){
-            posX += 1;
+        int dx = 0;
+        int dy = 0;
+
+        if (astronaut[0].x <= 0){
+            dx = 1;
         }
-        else if (posX >= 1322){
-            posX -= 1;
+        else if (astronaut[0].x >= 1322){
+            dx = -1;
         }
-        else if (posY <= 0){
-            posY += 1;
+        else if (astronaut[0].y <= 0){
+            dy = 1;
         }
-        else if (posY >= 631){
-            posY -= 1;
+        else if (astronaut[0].y >= 631){
+            dy = -1;
         }
         else{
             return true;
+        }
+
+        for(int i = 0; i < 12; i++){
+            astronaut[i].x += dx;
+            astronaut[i].y += dy;
         }
 
         return false;
