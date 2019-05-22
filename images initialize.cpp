@@ -10,7 +10,8 @@ extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
 extern Image spaceship;
 extern Image astronaut[12];
-extern Image hatch;
+extern game_peice hatches[2];
+//extern Image hatch;
 
 void calcBounds(Image &a);
 
@@ -157,17 +158,21 @@ int images_innitialize() {
      	return -1;
     }
 
-    hatch.bitmap = al_load_bitmap("Images/hatch panel.png");
-    al_convert_mask_to_alpha(hatch.bitmap, WHITE);
-    hatch.x = 500;
-    hatch.y = 300;
-    calcBounds(hatch);
-    if (!hatch.bitmap) {
-		al_show_native_message_box(display, "Error", "Error", "Failed to load image (hatch)!",
+    for(int i = 0; i < numHatches; i++){
+        hatches[i].element_image.bitmap = al_load_bitmap("Images/hatch panel.png");
+        al_convert_mask_to_alpha(hatches[i].element_image.bitmap, WHITE);
+        hatches[i].element_image.x= 500 + 25*i;
+        hatches[i].element_image.y = 300 + 25*i;
+        calcBounds(hatches[i].element_image);
+
+        if (!hatches[i].element_image.bitmap) {
+            al_show_native_message_box(display, "Error", "Error", "Failed to load image (hatch)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-      	al_destroy_display(display);
-     	return -1;
-	 }
+            al_destroy_display(display);
+            return -1;
+        }
+    }
+
 
     return 0;
 }
