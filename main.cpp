@@ -30,7 +30,7 @@ int direction;
 
 bool doexit = false;
 bool moving = false;
-bool has_hatch_1 = false;
+bool has_hatch = false;
 
 
 // Initialize display
@@ -38,7 +38,7 @@ ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *background;
 Image spaceship;
 Image astronaut[12];
-Image hatch;
+game_peice hatches[numHatches];
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT event;
 ALLEGRO_TIMER *timer;
@@ -98,13 +98,31 @@ int main(int argc, char *argv[]) {
                     direction = 3;
                     break;
                 case ALLEGRO_KEY_SPACE:
-                    if (isCollision(astronaut[frame], spaceship) && has_hatch_1){
-                        hatch.x = spaceship.x + 33;
-                        hatch.y = spaceship.y + 63;
-                        has_hatch_1 = false;
-                    }
-                    else if (isCollision(astronaut[frame], hatch)){
-                        has_hatch_1 = !has_hatch_1;
+                    for(int i = 0; i < numHatches; i++){
+                        if (isCollision(astronaut[frame], spaceship) && hatches[i].picked_up){
+                            hatches[i].element_image.x = spaceship.x + 33;
+                            hatches[i].element_image.y = spaceship.y + 63;
+                            hatches[i].picked_up = false;
+                            hatches[i].placed = true;
+                            has_hatch = false;
+
+                        }
+
+                        else if (isCollision(astronaut[frame], hatches[i].element_image) && !hatches[i].placed && !has_hatch){
+                            hatches[i].picked_up = true;
+                        }
+
+                        else if (isCollision(astronaut[frame], hatches[i].element_image) && has_hatch){
+                            if (hatches[i].picked_up){
+                                hatches[i].picked_up = false;
+                                has_hatch = false;
+                            }
+                            else{
+                                hatches[i].picked_up = false;
+                            }
+
+                        }
+
                     }
                     break;
             }
@@ -126,18 +144,28 @@ int main(int argc, char *argv[]) {
 
             printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
             calcBounds(astronaut[frame]);
-            calcBounds(hatch);
-
-            if (has_hatch_1){
-                hatch.x = astronaut[frame].x;
-                hatch.y = astronaut[frame].y;
+            for(int i = 0; i < numHatches; i++){
+                calcBounds(hatches[i].element_image);
             }
+
+            for(int i = 0; i < numHatches; i++){
+                if (hatches[i].picked_up){
+                    hatches[i].element_image.x = astronaut[frame].x;
+                    hatches[i].element_image.y = astronaut[frame].y;
+                    has_hatch = true;
+                }
+            }
+
 
             draw_background();
             draw_image(spaceship);
-            draw_image(hatch);
+
+            for(int i = 0; i < numHatches; i++){
+                draw_image(hatches[i].element_image);
+                drawBoundingBox(hatches[i].element_image);
+            }
+
             drawBoundingBox(astronaut[frame]);
-            drawBoundingBox(hatch);
             drawBoundingBox(spaceship);
             if (!moving){
                 frame = 0;
