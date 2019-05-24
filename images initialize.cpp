@@ -8,10 +8,9 @@
 
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
-extern Image spaceship;
+extern ship spaceship[numSpaceships];
 extern Image astronaut[12];
-extern game_peice hatches[2];
-//extern Image hatch;
+extern game_peice hatches[numHatches];
 
 void calcBounds(Image &a);
 
@@ -25,17 +24,26 @@ int images_innitialize() {
      	return -1;
 	 }
 
-    spaceship.bitmap = al_load_bitmap("Images/spaceship.png");
-    al_convert_mask_to_alpha(spaceship.bitmap, WHITE);
-    spaceship.x = 320;
-    spaceship.y = 150;
-    calcBounds(spaceship);
-    if (!spaceship.bitmap) {
-		al_show_native_message_box(display, "Error", "Error", "Failed to load image (spaceship)!",
-                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
-      	al_destroy_display(display);
-     	return -1;
-	 }
+
+    for(int i = 0; i < numSpaceships; i++){
+        spaceship[i].ship_image.bitmap = al_load_bitmap("Images/spaceship.png");
+        al_convert_mask_to_alpha(spaceship[i].ship_image.bitmap, WHITE);
+        spaceship[i].ship_image.x = 320 + 400*i;
+        spaceship[i].ship_image.y = 150;
+        calcBounds(spaceship[i].ship_image);
+        for(int j = 0; j < 3; j++){
+            spaceship[i].panel_spots[j] = false;
+            spaceship[i].cargo_spots[j] = false;
+        }
+
+        if (!spaceship[i].ship_image.bitmap) {
+            al_show_native_message_box(display, "Error", "Error", "Failed to load image (spaceship)!",
+                                     nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+            al_destroy_display(display);
+            return -1;
+        }
+    }
+
 
     astronaut[0].bitmap = al_load_bitmap("Images/astronaut_front_1.png");
     al_convert_mask_to_alpha(astronaut[0].bitmap , WHITE);
@@ -164,6 +172,9 @@ int images_innitialize() {
         hatches[i].element_image.x= 500 + 25*i;
         hatches[i].element_image.y = 300 + 25*i;
         calcBounds(hatches[i].element_image);
+        hatches[i].picked_up = false;
+        hatches[i].placed = false;
+        hatches[i].ship_placed = 0;
 
         if (!hatches[i].element_image.bitmap) {
             al_show_native_message_box(display, "Error", "Error", "Failed to load image (hatch)!",
