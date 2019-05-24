@@ -54,6 +54,8 @@ bool isCollision(Image a, Image b);
 void drawBoundingBox(Image image);
 void calcBounds(Image &a);
 
+
+
 // NOTE: argc, argv parameters are required.
 int main(int argc, char *argv[]) {
 
@@ -68,6 +70,11 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 12; i ++){
         astronaut[i].x = 320;
         astronaut[i].y = 240;
+    }
+
+    for(int i = 0; i < numHatches; i++){
+        hatches[i].picked_up = false;
+        hatches[i].placed = false;
     }
 
 	while (!doexit){
@@ -105,19 +112,23 @@ int main(int argc, char *argv[]) {
                             hatches[i].picked_up = false;
                             hatches[i].placed = true;
                             has_hatch = false;
-
                         }
 
                         else if (isCollision(astronaut[frame], hatches[i].element_image) && !hatches[i].placed && !has_hatch){
+                            printf("picking up\n");
                             hatches[i].picked_up = true;
+                            has_hatch = true;
                         }
 
                         else if (isCollision(astronaut[frame], hatches[i].element_image) && has_hatch){
+                            printf("has hatch\n");
                             if (hatches[i].picked_up){
                                 hatches[i].picked_up = false;
+                                printf("drop hatch\n");
                                 has_hatch = false;
                             }
                             else{
+                                printf("two hatches\n");
                                 hatches[i].picked_up = false;
                             }
 
@@ -142,13 +153,14 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
+            //printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
             calcBounds(astronaut[frame]);
             for(int i = 0; i < numHatches; i++){
                 calcBounds(hatches[i].element_image);
             }
 
             for(int i = 0; i < numHatches; i++){
+                //printf("%d", hatches[1].picked_up);
                 if (hatches[i].picked_up){
                     hatches[i].element_image.x = astronaut[frame].x;
                     hatches[i].element_image.y = astronaut[frame].y;
@@ -172,7 +184,7 @@ int main(int argc, char *argv[]) {
             }
 
             draw_astronaut(astronaut, frame, direction);
-            printf("width:%d\n", al_get_bitmap_width(astronaut[frame].bitmap));
+            //printf("width:%d\n", al_get_bitmap_width(astronaut[frame].bitmap));
             al_flip_display();
             counter ++;
             counter %= 60;
