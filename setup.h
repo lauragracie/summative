@@ -10,7 +10,7 @@ struct game_peice{
     Image element_image;
     bool picked_up;
     bool placed;
-    int ship_placed;
+    //int ship_placed;
 };
 
 struct ship{
@@ -20,7 +20,7 @@ struct ship{
 };
 
 #define WHITE al_map_rgb(255,255,255)
-#define numHatches 6
+#define numPieces 6
 #define numSpaceships 2
 
 #ifdef SETUP_H_INCLUDED
