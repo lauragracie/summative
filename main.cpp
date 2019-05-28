@@ -16,6 +16,8 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <stdio.h>
 #include "setup.h"
 
@@ -30,7 +32,8 @@ int direction;
 
 bool doexit = false;
 bool moving = false;
-bool has_hatch = false;
+bool has_piece = false;
+bool game_complete = false;
 
 
 // Initialize display
@@ -38,10 +41,12 @@ ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *background;
 ship spaceship[numSpaceships];
 Image astronaut[12];
-game_peice hatches[numHatches];
+game_peice hatches[numPieces];
+game_peice cargo[numPieces];
 ALLEGRO_EVENT_QUEUE *event_queue;
 ALLEGRO_EVENT event;
 ALLEGRO_TIMER *timer;
+ALLEGRO_FONT *font;
 
 int main_innitialize();
 int images_innitialize();
@@ -100,40 +105,62 @@ int main(int argc, char *argv[]) {
                     direction = 3;
                     break;
                 case ALLEGRO_KEY_SPACE:
-                    for(int i = 0; i < numHatches; i++){
+                    for(int i = 0; i < numPieces; i++){
                         for(int j = 0; j < numSpaceships; j++){
                             if (isCollision(astronaut[frame], spaceship[j].ship_image) && hatches[i].picked_up){
-                                hatches[i].picked_up = false;
-                                hatches[i].placed = true;
-                                hatches[i].ship_placed = j;
-                                has_hatch = false;
-
+                                //printf("collision\n");
                                 for(int k = 0; k < 3; k++){
                                     if (!spaceship[j].panel_spots[k]){
-                                        hatches[i].element_image.x = spaceship[hatches[i].ship_placed].ship_image.x + 33;
-                                        hatches[i].element_image.y = spaceship[hatches[i].ship_placed].ship_image.y + 63 + 63*k;
-                                        spaceship[hatches[i].ship_placed].panel_spots[k] = true;
+                                        hatches[i].element_image.x = spaceship[j].ship_image.x + 33;
+                                        hatches[i].element_image.y = spaceship[j].ship_image.y + 63 + 63*k;
+                                        spaceship[j].panel_spots[k] = true;
+                                        hatches[i].placed = true;
+                                        hatches[i].picked_up = false;
+                                        has_piece = false;
+                                        printf("placed\n");
                                         break;
                                     }
-                                    else{
-                                        //hatches[i].placed = false;
-
+                                }
+                            }
+                            else if (isCollision(astronaut[frame], spaceship[j].ship_image) && cargo[i].picked_up){
+                                //printf("collision\n");
+                                for(int k = 0; k < 3; k++){
+                                    if (!spaceship[j].cargo_spots[k] && spaceship[j].panel_spots[k]){
+                                        cargo[i].element_image.x = spaceship[j].ship_image.x + 43;
+                                        cargo[i].element_image.y = spaceship[j].ship_image.y + 73 + 63*k;
+                                        spaceship[j].cargo_spots[k] = true;
+                                        cargo[i].placed = true;
+                                        cargo[i].picked_up = false;
+                                        has_piece = false;
+                                        printf("placed\n");
+                                        break;
                                     }
                                 }
-
-                                break;
                             }
                         }
 
-                        if (isCollision(astronaut[frame], hatches[i].element_image) && !hatches[i].placed && !has_hatch){
+                        if (isCollision(astronaut[frame], hatches[i].element_image) && !hatches[i].placed && !has_piece){
                             printf("picking up\n");
                             hatches[i].picked_up = true;
-                            has_hatch = true;
+                            has_piece = true;
                         }
 
-                        else if (has_hatch && hatches[i].picked_up){
+                        else if (has_piece && hatches[i].picked_up){
                             hatches[i].picked_up = false;
-                            has_hatch = false;
+                            hatches[i].element_image.y += 15;
+                            has_piece = false;
+                            break;
+                        }
+
+                        else if (isCollision(astronaut[frame], cargo[i].element_image) && !cargo[i].placed && !has_piece){
+                            printf("picking up\n");
+                            cargo[i].picked_up = true;
+                            has_piece = true;
+                        }
+                        else if (has_piece && cargo[i].picked_up){
+                            cargo[i].picked_up = false;
+                            cargo[i].element_image.y += 15;
+                            has_piece = false;
                             break;
                         }
 
@@ -157,48 +184,120 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            //printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
-            calcBounds(astronaut[frame]);
-            for(int i = 0; i < numHatches; i++){
-                calcBounds(hatches[i].element_image);
+            if (isCollision(astronaut[frame], spaceship[0].ship_image)){
+                printf("collision\n");
+            }
+            else{
+                printf("no collision\n");
             }
 
-            for(int i = 0; i < numHatches; i++){
+            //printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
+            calcBounds(astronaut[frame]);
+            for(int i = 0; i < numPieces; i++){
+                calcBounds(hatches[i].element_image);
+                calcBounds(cargo[i].element_image);
+            }
+
+            for(int i = 0; i < numPieces; i++){
                 //printf("%d", hatches[1].picked_up);
                 if (hatches[i].picked_up){
                     hatches[i].element_image.x = astronaut[frame].x;
-                    hatches[i].element_image.y = astronaut[frame].y;
-                    has_hatch = true;
+                    hatches[i].element_image.y = astronaut[frame].y + 10;
+                    has_piece = true;
+
+                    if (direction == 1){
+                        hatches[i].element_image.x -= 25;
+                    }
+                    else if(direction == 3){
+                        hatches[i].element_image.x += 25;
+                    }
+                    else if(direction == 0){
+                        hatches[i].element_image.y += 15;
+                    }
+                }
+
+                else if (cargo[i].picked_up){
+                    cargo[i].element_image.x = astronaut[frame].x + 10;
+                    cargo[i].element_image.y = astronaut[frame].y + 20;
+                    has_piece = true;
+
+                    if (direction == 1){
+                        cargo[i].element_image.x -= 25;
+                    }
+                    else if(direction == 3){
+                        cargo[i].element_image.x += 25;
+                    }
+                    else if(direction == 0){
+                        cargo[i].element_image.y += 15;
+                    }
                 }
             }
 
-
             draw_background();
 
+            if (game_complete){
+                al_rest(0.5);
+                al_draw_text(font, WHITE, 1380/2, (700/4), ALLEGRO_ALIGN_CENTRE, "Level Completed");
+            }
+
+            else{
+                for(int i = 0; i < numSpaceships; i++){
+                    draw_image(spaceship[i].ship_image);
+                    drawBoundingBox(spaceship[i].ship_image);
+                }
+
+                if (!moving){
+                    frame = 0;
+                }
+
+                for(int i = 0; i < numPieces; i++){
+                    if(!cargo[i].picked_up || (cargo[i].picked_up && direction != 0)){
+                        draw_image(cargo[i].element_image);
+                        drawBoundingBox(cargo[i].element_image);
+                    }
+
+                }
+                for(int i = 0; i < numPieces; i++){
+                    if(!hatches[i].picked_up || (hatches[i].picked_up && direction != 0)){
+                        draw_image(hatches[i].element_image);
+                        drawBoundingBox(hatches[i].element_image);
+                    }
+                }
+
+                drawBoundingBox(astronaut[frame]);
+                draw_astronaut(astronaut, frame, direction);
+
+                for(int i = 0; i < numPieces; i++){
+                    if(cargo[i].picked_up && direction == 0){
+                        draw_image(cargo[i].element_image);
+                        drawBoundingBox(cargo[i].element_image);
+                    }
+
+                    if(hatches[i].picked_up && direction == 0){
+                        draw_image(hatches[i].element_image);
+                        drawBoundingBox(hatches[i].element_image);
+                    }
+
+                }
+
+
+            }
+
             for(int i = 0; i < numSpaceships; i++){
-                draw_image(spaceship[i].ship_image);
-                drawBoundingBox(spaceship[i].ship_image);
+                if (spaceship[i].panel_spots[2] && spaceship[i].cargo_spots[2]){
+                    game_complete = true;
+                }
+                else{
+                    game_complete = false;
+                    break;
+                }
             }
-
-
-            for(int i = 0; i < numHatches; i++){
-                draw_image(hatches[i].element_image);
-                drawBoundingBox(hatches[i].element_image);
-            }
-
-            drawBoundingBox(astronaut[frame]);
-
-            if (!moving){
-                frame = 0;
-            }
-
-            draw_astronaut(astronaut, frame, direction);
             //printf("width:%d\n", al_get_bitmap_width(astronaut[frame].bitmap));
             al_flip_display();
             counter ++;
             counter %= 60;
 
-            if(counter%15 == 0){
+            if(counter%12 == 0){
                 if(moving){
                     frame = frame%2 + 1;
                 }

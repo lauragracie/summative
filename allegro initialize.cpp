@@ -2,13 +2,16 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include "setup.h"
 #include <stdio.h>
 
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_EVENT event;
-extern 	ALLEGRO_TIMER *timer;
+extern ALLEGRO_TIMER *timer;
+extern ALLEGRO_FONT *font;
 
 int SCREEN_W  = 1380;       // screen width
 int SCREEN_H = 700;
@@ -62,6 +65,25 @@ int main_innitialize() {
     	return -1;
 	}
 
+    if (!al_init_font_addon()) {
+    	al_show_native_message_box(display, "Error", "Error", "Failed to initialize font addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+    	return -1;
+	}
+
+    if (!al_init_ttf_addon()) {
+    	al_show_native_message_box(display, "Error", "Error", "Failed to initialize primatives addon!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+    	return -1;
+	}
+
+    font = al_load_ttf_font("Font/space age.ttf", 72, 0);
+
+    if (!font){
+        al_show_native_message_box(display, "Error", "Error", "Could not load space age.ttf",
+                                    nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+        return -1;
+    }
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
  	al_register_event_source(event_queue, al_get_keyboard_event_source());
