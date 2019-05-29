@@ -40,6 +40,7 @@ bool game_complete = false;
 ALLEGRO_DISPLAY *display;
 ALLEGRO_BITMAP *background;
 ship spaceship[numSpaceships];
+ship cargoShip[numCargoShips];
 Image astronaut[12];
 game_peice hatches[numPieces];
 game_peice cargo[numPieces];
@@ -111,7 +112,7 @@ int main(int argc, char *argv[]) {
                                 //printf("collision\n");
                                 for(int k = 0; k < 3; k++){
                                     if (!spaceship[j].panel_spots[k]){
-                                        hatches[i].element_image.x = spaceship[j].ship_image.x + 33;
+                                        hatches[i].element_image.x = spaceship[j].ship_image.x + 33 + k;
                                         hatches[i].element_image.y = spaceship[j].ship_image.y + 63 + 63*k;
                                         spaceship[j].panel_spots[k] = true;
                                         hatches[i].placed = true;
@@ -184,14 +185,6 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            if (isCollision(astronaut[frame], spaceship[0].ship_image)){
-                printf("collision\n");
-            }
-            else{
-                printf("no collision\n");
-            }
-
-            //printf("x=%d, y=%d", astronaut[frame].x, astronaut[frame].y);
             calcBounds(astronaut[frame]);
             for(int i = 0; i < numPieces; i++){
                 calcBounds(hatches[i].element_image);
@@ -199,7 +192,6 @@ int main(int argc, char *argv[]) {
             }
 
             for(int i = 0; i < numPieces; i++){
-                //printf("%d", hatches[1].picked_up);
                 if (hatches[i].picked_up){
                     hatches[i].element_image.x = astronaut[frame].x;
                     hatches[i].element_image.y = astronaut[frame].y + 10;
@@ -246,9 +238,11 @@ int main(int argc, char *argv[]) {
                     drawBoundingBox(spaceship[i].ship_image);
                 }
 
-                if (!moving){
-                    frame = 0;
+                for(int i = 0; i < numCargoShips; i++){
+                    draw_image(cargoShip[i].ship_image);
+                    drawBoundingBox(cargoShip[i].ship_image);
                 }
+
 
                 for(int i = 0; i < numPieces; i++){
                     if(!cargo[i].picked_up || (cargo[i].picked_up && direction != 0)){
@@ -262,6 +256,10 @@ int main(int argc, char *argv[]) {
                         draw_image(hatches[i].element_image);
                         drawBoundingBox(hatches[i].element_image);
                     }
+                }
+
+                if (!moving){
+                    frame = 0;
                 }
 
                 drawBoundingBox(astronaut[frame]);
@@ -292,7 +290,7 @@ int main(int argc, char *argv[]) {
                     break;
                 }
             }
-            //printf("width:%d\n", al_get_bitmap_width(astronaut[frame].bitmap));
+
             al_flip_display();
             counter ++;
             counter %= 60;
@@ -307,6 +305,7 @@ int main(int argc, char *argv[]) {
 
     // Free up memory taken by display.
     al_destroy_display(display);
+    //al_destroy_bitmap()
 
     // Exit with no errors
 	return 0;

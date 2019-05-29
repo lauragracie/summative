@@ -9,6 +9,7 @@
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
 extern ship spaceship[numSpaceships];
+extern ship cargoShip[numCargoShips];
 extern Image astronaut[12];
 extern game_peice hatches[numPieces];
 extern game_peice cargo[numPieces];
@@ -45,6 +46,24 @@ int images_innitialize() {
         }
     }
 
+    for(int i = 0; i < numCargoShips; i++){
+        cargoShip[i].ship_image.bitmap = al_load_bitmap("Images/cargo ship.png");
+        al_convert_mask_to_alpha(cargoShip[i].ship_image.bitmap, WHITE);
+        cargoShip[i].ship_image.x = 500 + 400*i;
+        cargoShip[i].ship_image.y = 550;
+        calcBounds(cargoShip[i].ship_image);
+        for(int j = 0; j < 3; j++){
+            cargoShip[i].panel_spots[j] = false;
+            cargoShip[i].cargo_spots[j] = false;
+        }
+
+        if (!cargoShip[i].ship_image.bitmap) {
+            al_show_native_message_box(display, "Error", "Error", "Failed to load image (cargoShip)!",
+                                     nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+            al_destroy_display(display);
+            return -1;
+        }
+    }
 
     astronaut[0].bitmap = al_load_bitmap("Images/astronaut_front_1.png");
     al_convert_mask_to_alpha(astronaut[0].bitmap , WHITE);
