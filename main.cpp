@@ -140,6 +140,38 @@ int main(int argc, char *argv[]) {
                             }
                         }
 
+                        for(int j = 0; j < numCargoShips; j++){
+                            if (isCollision(astronaut[frame], cargoShip[j].ship_image) && hatches[i].picked_up){
+                                for(int k = 0; k < 3; k++){
+                                    if (!cargoShip[j].panel_spots[k]){
+                                        hatches[i].element_image.x = cargoShip[j].ship_image.x + 8 + 71*k;
+                                        hatches[i].element_image.y = cargoShip[j].ship_image.y + 43 - k;
+                                        cargoShip[j].panel_spots[k] = true;
+                                        hatches[i].placed = true;
+                                        hatches[i].picked_up = false;
+                                        has_piece = false;
+                                        printf("placed\n");
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (isCollision(astronaut[frame], cargoShip[j].ship_image) && cargo[i].picked_up){
+                                //printf("collision\n");
+                                for(int k = 0; k < 3; k++){
+                                    if (!cargoShip[j].cargo_spots[k] && cargoShip[j].panel_spots[k]){
+                                        cargo[i].element_image.x = cargoShip[j].ship_image.x + 8 + 71*k;
+                                        cargo[i].element_image.y = cargoShip[j].ship_image.y + 43 -  k;
+                                        cargoShip[j].cargo_spots[k] = true;
+                                        cargo[i].placed = true;
+                                        cargo[i].picked_up = false;
+                                        has_piece = false;
+                                        printf("placed\n");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
                         if (isCollision(astronaut[frame], hatches[i].element_image) && !hatches[i].placed && !has_piece){
                             printf("picking up\n");
                             hatches[i].picked_up = true;
@@ -305,7 +337,19 @@ int main(int argc, char *argv[]) {
 
     // Free up memory taken by display.
     al_destroy_display(display);
-    //al_destroy_bitmap()
+    for(int i = 0; i < 12; i++){
+        al_destroy_bitmap(astronaut[i].bitmap);
+    }
+    for(int i = 0; i < numPieces; i++){
+        al_destroy_bitmap(hatches[i].element_image.bitmap);
+        al_destroy_bitmap(cargo[i].element_image.bitmap);
+    }
+    for(int i = 0; i < numSpaceships; i++){
+        al_destroy_bitmap(spaceship[i].ship_image.bitmap);
+    }
+    for(int i = 0; i < numCargoShips; i++){
+        al_destroy_bitmap(cargoShip[i].ship_image.bitmap);
+    }
 
     // Exit with no errors
 	return 0;
