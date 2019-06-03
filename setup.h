@@ -6,6 +6,18 @@ struct Image {
     int bbRight, bbLeft, bbTop, bbBottom; // boundary box
 };
 
+struct astronaut{
+    Image astronaut_image[12];
+    int dx;
+    int dy;
+    int x;
+    int y;
+    int frame;
+    int direction;
+    bool moving;
+    bool has_piece;
+};
+
 struct game_peice{
     Image element_image;
     bool picked_up;
@@ -19,10 +31,25 @@ struct ship{
     bool cargo_spots[3];
 };
 
+/*struct level{
+    int game_clock;
+    int numPieces;
+    int numCargoShips;
+    int numSpaceships;
+    int hatches_x[numPieces];
+    int hatches_y[numPieces];
+    int cargo_x[numPieces];
+    int cargo_y[numPieces];
+    int cargoShip_x[numCargoShips];
+    int cargoShip_y[numCargoShips];
+    int spaceship_x[numSpaceships];
+    int spaceship_y[numSpaceships];
+};*/
+
 #define WHITE al_map_rgb(255,255,255)
 #define numPieces 9
 #define numSpaceships 2
-#define numCargoShips 1
+#define numCargoShips 0
 
 #ifdef SETUP_H_INCLUDED
 

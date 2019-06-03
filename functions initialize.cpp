@@ -9,7 +9,7 @@
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
 extern Image spaceship;
-extern Image astronaut[12];
+extern Image astronaut_1[12];
 extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_EVENT event;
 extern ALLEGRO_TIMER *timer;
