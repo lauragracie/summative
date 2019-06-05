@@ -19,6 +19,21 @@ struct ship{
     bool cargo_spots[3];
 };
 
+/*struct level{
+    int game_clock;
+    int numPieces;
+    int numCargoShips;
+    int numSpaceships;
+    int hatches_x[numPieces];
+    int hatches_y[numPieces];
+    int cargo_x[numPieces];
+    int cargo_y[numPieces];
+    int cargoShip_x[numCargoShips];
+    int cargoShip_y[numCargoShips];
+    int spaceship_x[numSpaceships];
+    int spaceship_y[numSpaceships];
+};*/
+
 #define WHITE al_map_rgb(255,255,255)
 #define numPieces 9
 #define numSpaceships 2

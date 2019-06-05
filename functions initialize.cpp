@@ -9,7 +9,7 @@
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
 extern Image spaceship;
-extern Image astronaut[12];
+extern Image astronaut_1[12];
 extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_EVENT event;
 extern ALLEGRO_TIMER *timer;
@@ -34,6 +34,10 @@ void draw_image(Image &a){
 void draw_astronaut(Image astronaut[], int frame, int direction){
     frame += direction*3;
     al_draw_bitmap(astronaut[frame].bitmap,astronaut[frame].x,astronaut[frame].y,0);
+}
+
+void draw_start_button(){
+    al_draw_rectangle(620, 450, 800, 500, WHITE, 2);
 }
 
 
