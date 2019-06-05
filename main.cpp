@@ -29,11 +29,13 @@ int astronautY = 240;
 int counter;
 int frame;
 int direction;
+int game_clock = 150;
 
 bool doexit = false;
 bool moving = false;
 bool has_piece = false;
 bool game_complete = false;
+bool action_complete = false;
 
 
 // Initialize display
@@ -106,6 +108,7 @@ int main(int argc, char *argv[]) {
                     direction = 3;
                     break;
                 case ALLEGRO_KEY_SPACE:
+                    action_complete = false;
                     for(int i = 0; i < numPieces; i++){
                         for(int j = 0; j < numSpaceships; j++){
                             if (isCollision(astronaut[frame], spaceship[j].ship_image) && hatches[i].picked_up){
@@ -122,6 +125,8 @@ int main(int argc, char *argv[]) {
                                         break;
                                     }
                                 }
+                                action_complete = true;
+                                break;
                             }
                             else if (isCollision(astronaut[frame], spaceship[j].ship_image) && cargo[i].picked_up){
                                 //printf("collision\n");
@@ -137,6 +142,8 @@ int main(int argc, char *argv[]) {
                                         break;
                                     }
                                 }
+                                action_complete = true;
+                                break;
                             }
                         }
 
@@ -153,14 +160,17 @@ int main(int argc, char *argv[]) {
                                         printf("placed\n");
                                         break;
                                     }
+
                                 }
+                                action_complete = true;
+                                break;
                             }
                             else if (isCollision(astronaut[frame], cargoShip[j].ship_image) && cargo[i].picked_up){
                                 //printf("collision\n");
                                 for(int k = 0; k < 3; k++){
                                     if (!cargoShip[j].cargo_spots[k] && cargoShip[j].panel_spots[k]){
-                                        cargo[i].element_image.x = cargoShip[j].ship_image.x + 8 + 71*k;
-                                        cargo[i].element_image.y = cargoShip[j].ship_image.y + 43 -  k;
+                                        cargo[i].element_image.x = cargoShip[j].ship_image.x + 15 + 71*k;
+                                        cargo[i].element_image.y = cargoShip[j].ship_image.y + 50 -  k;
                                         cargoShip[j].cargo_spots[k] = true;
                                         cargo[i].placed = true;
                                         cargo[i].picked_up = false;
@@ -169,6 +179,8 @@ int main(int argc, char *argv[]) {
                                         break;
                                     }
                                 }
+                                action_complete = true;
+                                break;
                             }
                         }
 
@@ -176,12 +188,15 @@ int main(int argc, char *argv[]) {
                             printf("picking up\n");
                             hatches[i].picked_up = true;
                             has_piece = true;
+                            action_complete = true;
+                            break;
                         }
 
                         else if (has_piece && hatches[i].picked_up){
                             hatches[i].picked_up = false;
                             hatches[i].element_image.y += 15;
                             has_piece = false;
+                            action_complete = true;
                             break;
                         }
 
@@ -189,14 +204,21 @@ int main(int argc, char *argv[]) {
                             printf("picking up\n");
                             cargo[i].picked_up = true;
                             has_piece = true;
+                            action_complete = true;
+                            break;
                         }
+
                         else if (has_piece && cargo[i].picked_up){
                             cargo[i].picked_up = false;
                             cargo[i].element_image.y += 15;
                             has_piece = false;
+                            action_complete = true;
                             break;
                         }
 
+                        if(action_complete){
+                            break;
+                        }
                     }
                     break;
             }
@@ -216,8 +238,10 @@ int main(int argc, char *argv[]) {
                     astronaut[i].y += dy;
                 }
             }
+            for(int i = 0; i < 12; i++){
+                calcBounds(astronaut[i]);
+            }
 
-            calcBounds(astronaut[frame]);
             for(int i = 0; i < numPieces; i++){
                 calcBounds(hatches[i].element_image);
                 calcBounds(cargo[i].element_image);
@@ -265,6 +289,7 @@ int main(int argc, char *argv[]) {
             }
 
             else{
+                al_draw_textf(font, WHITE, 10, 0, 0, "%d", game_clock);
                 for(int i = 0; i < numSpaceships; i++){
                     draw_image(spaceship[i].ship_image);
                     drawBoundingBox(spaceship[i].ship_image);
@@ -313,13 +338,15 @@ int main(int argc, char *argv[]) {
 
             }
 
+            game_complete = true;
             for(int i = 0; i < numSpaceships; i++){
-                if (spaceship[i].panel_spots[2] && spaceship[i].cargo_spots[2]){
-                    game_complete = true;
-                }
-                else{
+                if (!spaceship[i].panel_spots[2] || !spaceship[i].cargo_spots[2]){
                     game_complete = false;
-                    break;
+                }
+            }
+            for(int i = 0; i < numCargoShips; i++){
+                if (!cargoShip[i].panel_spots[2] || !cargoShip[i].cargo_spots[2]){
+                    game_complete = false;
                 }
             }
 
@@ -331,6 +358,9 @@ int main(int argc, char *argv[]) {
                 if(moving){
                     frame = frame%2 + 1;
                 }
+            }
+            if(counter%60 == 0){
+                game_clock--;
             }
         }
 	}

@@ -20,7 +20,7 @@ struct ship{
 };
 
 #define WHITE al_map_rgb(255,255,255)
-#define numPieces 6
+#define numPieces 9
 #define numSpaceships 2
 #define numCargoShips 1
 
