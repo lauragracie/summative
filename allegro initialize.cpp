@@ -12,6 +12,7 @@ extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_EVENT event;
 extern ALLEGRO_TIMER *timer;
 extern ALLEGRO_FONT *font;
+extern ALLEGRO_FONT *font_small;
 
 int SCREEN_W  = 1380;       // screen width
 int SCREEN_H = 700;
@@ -39,6 +40,12 @@ int main_innitialize() {
     // Initialize keyboard routines
 	if (!al_install_keyboard()) {
 	    al_show_native_message_box(display, "Error", "Error", "failed to initialize the keyboard!",
+                                 nullptr, ALLEGRO_MESSAGEBOX_ERROR);
+      	return -1;
+   	}
+
+   	if(!al_install_mouse()){
+        al_show_native_message_box(display, "Error", "Error", "failed to initialize the mouse!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	return -1;
    	}
@@ -78,6 +85,7 @@ int main_innitialize() {
 	}
 
     font = al_load_ttf_font("Font/space age.ttf", 72, 0);
+    font_small = al_load_ttf_font("Font/space age.ttf", 40, 0);
 
     if (!font){
         al_show_native_message_box(display, "Error", "Error", "Could not load space age.ttf",
@@ -88,6 +96,7 @@ int main_innitialize() {
     al_register_event_source(event_queue, al_get_display_event_source(display));
  	al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_mouse_event_source());
 
     return 0;
 }
