@@ -18,7 +18,7 @@ int SCREEN_W  = 1380;       // screen width
 int SCREEN_H = 700;
 float FPS = 60.0;
 
-int main_innitialize() {
+int allegro_innitialize() {
 
     // Initialize image add on
     if (!al_init_image_addon()) {
