@@ -25,24 +25,23 @@
 #include <stdio.h>
 #include "setup.h"
 
-int dx = 0; //Change in astronaut x value
-int dy = 0; //Change in astronaut y value
+int dx = 0;     //Change in astronaut x value
+int dy = 0;     //Change in astronaut y value
 
-int counter; //Counts number of frames. Overflows after 60 frames (1 second)
-int frame; //Which one of the 12 astronaut sprites will be displayed
-int direction; //Direction in which the astronaut is facing. Down = 0. Left = 1. Up = 2. Right = 3.
-int game_clock = 100; //How many seconds the player has to fill the rockets
+int counter;    //Counts number of frames. Overflows after 60 frames (1 second)
+int frame;      // 0 = standing still, 1 and 2 = two different walking sprites.
+int direction;  //Direction in which the astronaut is facing. Down = 0. Left = 1. Up = 2. Right = 3.
+int game_clock = 100;   //How many seconds the player has to fill the rockets
 
-bool doexit = false; //Does the user want to exit the game?
-bool moving = false; //Is the astronaut moving?
+bool doexit = false;    //Does the user want to exit the game?
+bool moving = false;    //Is the astronaut moving?
 bool has_piece = false; //Does the astronaut have a hatch panel or cargo piece?
-bool start_game = false; //Has the user pressed play?
-bool show_instructions = false; //Are the instructions on the screen?
-bool game_complete = false; //Has the user completed the level?
-bool game_over = false; //Has the user lost the level?
-bool action_complete = false; //Has the user finished the action?
+bool start_game = false;        //Has the user pressed play?
+bool show_instructions = false;    //Are the instructions on the screen?
+bool game_complete = false;     //Has the user completed the level?
+bool action_complete = false;   //Has the user finished the action?
 
-char instructions[600]; //Stores the instructions on how to play the game.
+char instructions[600];     //Stores the instructions on how to play the game.
 
 //Initialize Allegro add-ons (display, event queue, timer, fonts etc)
 ALLEGRO_DISPLAY *display;
@@ -53,9 +52,9 @@ ALLEGRO_FONT *font;
 ALLEGRO_FONT *font_small;
 
 ALLEGRO_BITMAP *background;
-ship spaceship[numSpaceships]; //Initialize arrays of type ship to store data on the spaceships and cargo ships
+ship spaceship[numSpaceships];  //Initialize arrays of type ship to store data on the spaceships and cargo ships
 ship cargoShip[numCargoShips];
-Image astronaut[12]; //Initialize array of type Image to store the 12 astronaut sprites
+Image astronaut[12];    //Initialize array of type Image to store the 12 astronaut sprites
 Image logo;
 Image logo_background;
 game_peice hatches[numPieces]; //Initialize arrays of type game_piece to store data on the hatch panels and cargo pieces
@@ -97,6 +96,7 @@ int main(int argc, char *argv[]) {
     al_draw_rectangle(620, 450, 800, 500, WHITE, 2);
     al_draw_text(font_small, WHITE, 640, 460, 0, "PLAY");
     al_flip_display();
+
 
     //wait for user to click the play button, then display the instructions screen
     while (!start_game){
@@ -228,7 +228,6 @@ int main(int argc, char *argv[]) {
                                         hatches[i].placed = true;
                                         hatches[i].picked_up = false;
                                         has_piece = false;
-                                        printf("placed\n");
                                         break;
                                     }
 
@@ -245,7 +244,6 @@ int main(int argc, char *argv[]) {
                                         cargo[i].placed = true;
                                         cargo[i].picked_up = false;
                                         has_piece = false;
-                                        printf("placed\n");
                                         break;
                                     }
                                 }
@@ -322,7 +320,7 @@ int main(int argc, char *argv[]) {
                     hatches[i].element_image.y = astronaut[frame].y + 10;
                     has_piece = true;
 
-                    //The x and y values
+                    //The x and y values change depending on which direction the astronaut is walking in
                     if (direction == 1){
                         hatches[i].element_image.x -= 25;
                     }
@@ -334,6 +332,8 @@ int main(int argc, char *argv[]) {
                     }
                 }
 
+                //This section is the same as the previous one, except for cargo.
+                //Some of the x and y values are different because the cargo pieces are smaller than hatches
                 else if (cargo[i].picked_up){
                     cargo[i].element_image.x = astronaut[frame].x + 10;
                     cargo[i].element_image.y = astronaut[frame].y + 20;
@@ -353,72 +353,73 @@ int main(int argc, char *argv[]) {
 
             draw_background();
 
+            //If the game is completed, there is a short rest, then "Level Complete" and the time is displayed.
             if (game_complete){
                 al_rest(0.5);
                 al_draw_text(font, WHITE, 1380/2, (700/4), ALLEGRO_ALIGN_CENTRE, "Level Completed");
                 al_draw_textf(font, WHITE, 1380/2, 700/2, ALLEGRO_ALIGN_CENTER, "Time: %d seconds", (100 - game_clock) );
             }
 
+            //If the game clock reaches 0 and the level hasn't been completed, display the 'game over' message.
             else if (game_clock < 0){
                 al_rest(0.5);
                 al_draw_multiline_text(font, WHITE, 1380/2, 700/4, 1200, 200, ALLEGRO_ALIGN_CENTER, "You ran out of time Game Over");
             }
 
+            //If the level isn't completed and the timer hasn't run out, display the main game elements
             else{
+                //game clock is drawn in the top left corner
                 al_draw_textf(font, WHITE, 10, 0, 0, "%d", game_clock);
-                printf("%d", game_clock);
+
+                //display all the spaceships and cargo ships
                 for(int i = 0; i < numSpaceships; i++){
                     draw_image(spaceship[i].ship_image);
-                    //drawBoundingBox(spaceship[i].ship_image);
                 }
-
                 for(int i = 0; i < numCargoShips; i++){
                     draw_image(cargoShip[i].ship_image);
-                    //drawBoundingBox(cargoShip[i].ship_image);
                 }
 
-
+                //If a game piece hasn't been picked up, or it has been picked and the astronaut isn't facing down,
+                //the game piece will be drawn behind the astronaut.
                 for(int i = 0; i < numPieces; i++){
+                    printf("%d", direction);
                     if(!cargo[i].picked_up || (cargo[i].picked_up && direction != 0)){
                         draw_image(cargo[i].element_image);
-                        //drawBoundingBox(cargo[i].element_image);
                     }
-
                 }
+
                 for(int i = 0; i < numPieces; i++){
+                    //The hatches are drawn after the cargo so that they appear in that order when they are placed on a ship
                     if(!hatches[i].picked_up || (hatches[i].picked_up && direction != 0)){
                         draw_image(hatches[i].element_image);
-                        //drawBoundingBox(hatches[i].element_image);
                     }
                 }
 
+                //If the astronaut isn't moving, the frame is set to 0 (standing still frame)
                 if (!moving){
                     frame = 0;
                 }
 
-                //drawBoundingBox(astronaut[frame]);
+                //draw the astronaut
                 draw_astronaut(astronaut, frame, direction);
 
-                //draw_image(astronaut_2[0]);
-
+                //If the astronaut is carrying a game piece and facing downwards, the piece is drawn in front of the astronaut
                 for(int i = 0; i < numPieces; i++){
                     if(cargo[i].picked_up && direction == 0){
                         draw_image(cargo[i].element_image);
-                        //drawBoundingBox(cargo[i].element_image);
                     }
-
                     if(hatches[i].picked_up && direction == 0){
                         draw_image(hatches[i].element_image);
-                        //drawBoundingBox(hatches[i].element_image);
                     }
 
                 }
 
-            counter ++;
-            counter %= 60;
-
+                //The frame counter goes up by one every frame and when it gets to 60, it gets set back to 0
+                counter ++;
+                counter %= 60;
             }
 
+            //If the 3rd hatch and panel spots are filled up on each of the spaceships and cargo ships, the level is completed.
             game_complete = true;
             for(int i = 0; i < numSpaceships; i++){
                 if (!spaceship[i].panel_spots[2] || !spaceship[i].cargo_spots[2]){
@@ -433,20 +434,26 @@ int main(int argc, char *argv[]) {
 
             al_flip_display();
 
-
+            //Every 12 counts (5 times per second), if the astronaut is moving,
+            //the frame alternates between 1 and 2 (the two walking frames)
             if(counter%12 == 0){
                 if(moving){
                     frame = frame%2 + 1;
                 }
             }
+
+            //Every 60 counts (every second), the game clock goes down by one
             if(counter%60 == 0){
                 game_clock--;
             }
+
         }
 	}
 
     // Free up memory taken by display.
     al_destroy_display(display);
+
+    //Free up memory taken by bitmaps
     for(int i = 0; i < 12; i++){
         al_destroy_bitmap(astronaut[i].bitmap);
     }
