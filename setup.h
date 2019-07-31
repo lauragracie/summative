@@ -7,7 +7,21 @@ struct Image {
     int bbRight, bbLeft, bbTop, bbBottom; // boundary box
 };
 
+
+struct astronaut{
+    Image astronaut_image[12];
+    int dx;
+    int dy;
+    int x;
+    int y;
+    int frame;
+    int direction;
+    bool moving;
+    bool has_piece;
+};
+
 //Structure to store data on game pieces (hatches and cargo)
+
 struct game_peice{
     Image element_image; //The image of the cargo/hatch
     bool picked_up; //If the game piece is being carried by the astronaut
@@ -24,13 +38,28 @@ struct ship{
 };
 
 
+/*struct level{
+    int game_clock;
+    int numPieces;
+    int numCargoShips;
+    int numSpaceships;
+    int hatches_x[numPieces];
+    int hatches_y[numPieces];
+    int cargo_x[numPieces];
+    int cargo_y[numPieces];
+    int cargoShip_x[numCargoShips];
+    int cargoShip_y[numCargoShips];
+    int spaceship_x[numSpaceships];
+    int spaceship_y[numSpaceships];
+};*/
+
 #define WHITE al_map_rgb(255,255,255)
 
 //Macro definitions for the number of hatches, cargo pieces, spaceships, and cargo ships
 //These variables are used throughout the code, so it's very easy to change how many elements you want to be displayed.
 #define numPieces 9
 #define numSpaceships 2
-#define numCargoShips 1
+#define numCargoShips 0
 
 #ifdef SETUP_H_INCLUDED
 
