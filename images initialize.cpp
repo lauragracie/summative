@@ -10,8 +10,8 @@ extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_BITMAP *background;
 extern ship spaceship[numSpaceships];
 extern ship cargoShip[numCargoShips];
-extern astronaut astronaut_1[12];
-extern astronaut astronaut_2[12];
+extern astronaut astronaut_1;
+extern astronaut astronaut_2;
 extern game_peice hatches[numPieces];
 extern game_peice cargo[numPieces];
 
@@ -77,39 +77,39 @@ int images_innitialize() {
 	 }
 
     astronaut_1.astronaut_image[1].bitmap  = al_load_bitmap("Images/astronaut_front_2.png");
-    al_convert_mask_to_alpha(astronaut_1.astronaut_image.bitmap , WHITE);
-    calcBounds(astronaut_1.astronaut_image);
-    if (!astronaut_1.astronaut_image.bitmap ) {
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[1].bitmap , WHITE);
+    calcBounds(astronaut_1.astronaut_image[1]);
+    if (!astronaut_1.astronaut_image[1].bitmap ) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_front_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
 	 }
 
-    astronaut_1.astronaut_image.bitmap = al_load_bitmap("Images/astronaut_front_3.png");
-    al_convert_mask_to_alpha(astronaut_1[2].bitmap , WHITE);
-    calcBounds(astronaut_1[2]);
-    if (!astronaut_1[2].bitmap) {
+    astronaut_1.astronaut_image[2].bitmap = al_load_bitmap("Images/astronaut_front_3.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[2].bitmap , WHITE);
+    calcBounds(astronaut_1.astronaut_image[2]);
+    if (!astronaut_1.astronaut_image[2].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_front_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[3].bitmap = al_load_bitmap("Images/astronaut_left_1.png");
-    al_convert_mask_to_alpha(astronaut_1[3].bitmap, WHITE);
-    calcBounds(astronaut_1[3]);
-    if (!astronaut_1[3].bitmap) {
+    astronaut_1.astronaut_image[3].bitmap = al_load_bitmap("Images/astronaut_left_1.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[3].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[3]);
+    if (!astronaut_1.astronaut_image[3].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[4].bitmap = al_load_bitmap("Images/astronaut_left_2.png");
-    al_convert_mask_to_alpha(astronaut_1[4].bitmap, WHITE);
-    calcBounds(astronaut_1[4]);
-    if (!astronaut_1[4].bitmap) {
+    astronaut_1.astronaut_image[4].bitmap = al_load_bitmap("Images/astronaut_left_2.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[4].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[4]);
+    if (!astronaut_1.astronaut_image[4].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
@@ -117,70 +117,70 @@ int images_innitialize() {
     }
 
 
-    astronaut_1[5].bitmap = al_load_bitmap("Images/astronaut_left_3.png");
-    al_convert_mask_to_alpha(astronaut_1[5].bitmap, WHITE);
-    calcBounds(astronaut_1[5]);
-    if (!astronaut_1[5].bitmap) {
+    astronaut_1.astronaut_image[5].bitmap = al_load_bitmap("Images/astronaut_left_3.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[5].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[5]);
+    if (!astronaut_1.astronaut_image[5].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[6].bitmap = al_load_bitmap("Images/astronaut_back_1.png");
-    al_convert_mask_to_alpha(astronaut_1[6].bitmap, WHITE);
-    calcBounds(astronaut_1[6]);
-    if (!astronaut_1[6].bitmap) {
+    astronaut_1.astronaut_image[6].bitmap = al_load_bitmap("Images/astronaut_back_1.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[6].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[6]);
+    if (!astronaut_1.astronaut_image[6].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[7].bitmap = al_load_bitmap("Images/astronaut_back_2.png");
-    al_convert_mask_to_alpha(astronaut_1[7].bitmap, WHITE);
-    calcBounds(astronaut_1[7]);
-    if (!astronaut_1[7].bitmap) {
+    astronaut_1.astronaut_image[7].bitmap = al_load_bitmap("Images/astronaut_back_2.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[7].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[7]);
+    if (!astronaut_1.astronaut_image[7].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[8].bitmap = al_load_bitmap("Images/astronaut_back_3.png");
-    al_convert_mask_to_alpha(astronaut_1[8].bitmap, WHITE);
-    calcBounds(astronaut_1[8]);
-    if (!astronaut_1[8].bitmap) {
+    astronaut_1.astronaut_image[8].bitmap = al_load_bitmap("Images/astronaut_back_3.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[8].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[8]);
+    if (!astronaut_1.astronaut_image[8].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[9].bitmap = al_load_bitmap("Images/astronaut_right_1.png");
-    al_convert_mask_to_alpha(astronaut_1[9].bitmap, WHITE);
-    calcBounds(astronaut_1[9]);
-    if (!astronaut_1[9].bitmap) {
+    astronaut_1.astronaut_image[9].bitmap = al_load_bitmap("Images/astronaut_right_1.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[9].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[9]);
+    if (!astronaut_1.astronaut_image[9].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_right_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[10].bitmap = al_load_bitmap("Images/astronaut_right_2.png");
-    al_convert_mask_to_alpha(astronaut_1[10].bitmap, WHITE);
-    calcBounds(astronaut_1[10]);
-    if (!astronaut_1[10].bitmap) {
+    astronaut_1.astronaut_image[10].bitmap = al_load_bitmap("Images/astronaut_right_2.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[10].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[10]);
+    if (!astronaut_1.astronaut_image[10].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_1[11].bitmap = al_load_bitmap("Images/astronaut_right_3.png");
-    al_convert_mask_to_alpha(astronaut_1[11].bitmap, WHITE);
-    calcBounds(astronaut_1[11]);
-    if (!astronaut_1[11].bitmap) {
+    astronaut_1.astronaut_image[11].bitmap = al_load_bitmap("Images/astronaut_right_3.png");
+    al_convert_mask_to_alpha(astronaut_1.astronaut_image[11].bitmap, WHITE);
+    calcBounds(astronaut_1.astronaut_image[11]);
+    if (!astronaut_1.astronaut_image[11].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
@@ -188,50 +188,50 @@ int images_innitialize() {
     }
 
     // Astronaut #2
-        astronaut_2[0].bitmap = al_load_bitmap("Images/astronaut_front_1.png");
-    al_convert_mask_to_alpha(astronaut_2[0].bitmap , WHITE);
-    calcBounds(astronaut_2[0]);
-    if (!astronaut_2[0].bitmap ) {
+        astronaut_2.astronaut_image[0].bitmap = al_load_bitmap("Images/astronaut_front_1.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[0].bitmap , WHITE);
+    calcBounds(astronaut_2.astronaut_image[0]);
+    if (!astronaut_2.astronaut_image[0].bitmap ) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_front_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
 	 }
 
-    astronaut_2[1].bitmap  = al_load_bitmap("Images/astronaut_front_2.png");
-    al_convert_mask_to_alpha(astronaut_2[1].bitmap , WHITE);
-    calcBounds(astronaut_2[1]);
-    if (!astronaut_2[1].bitmap ) {
+    astronaut_2.astronaut_image[1].bitmap  = al_load_bitmap("Images/astronaut_front_2.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[1].bitmap , WHITE);
+    calcBounds(astronaut_2.astronaut_image[1]);
+    if (!astronaut_2.astronaut_image[1].bitmap ) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_front_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
 	 }
 
-    astronaut_2[2].bitmap = al_load_bitmap("Images/astronaut_front_3.png");
-    al_convert_mask_to_alpha(astronaut_2[2].bitmap , WHITE);
-    calcBounds(astronaut_2[2]);
-    if (!astronaut_2[2].bitmap) {
+    astronaut_2.astronaut_image[2].bitmap = al_load_bitmap("Images/astronaut_front_3.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[2].bitmap , WHITE);
+    calcBounds(astronaut_2.astronaut_image[2]);
+    if (!astronaut_2.astronaut_image[2].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_front_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[3].bitmap = al_load_bitmap("Images/astronaut_left_1.png");
-    al_convert_mask_to_alpha(astronaut_2[3].bitmap, WHITE);
-    calcBounds(astronaut_2[3]);
-    if (!astronaut_2[3].bitmap) {
+    astronaut_2.astronaut_image[3].bitmap = al_load_bitmap("Images/astronaut_left_1.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[3].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[3]);
+    if (!astronaut_2.astronaut_image[3].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[4].bitmap = al_load_bitmap("Images/astronaut_left_2.png");
-    al_convert_mask_to_alpha(astronaut_2[4].bitmap, WHITE);
-    calcBounds(astronaut_2[4]);
-    if (!astronaut_2[4].bitmap) {
+    astronaut_2.astronaut_image[4].bitmap = al_load_bitmap("Images/astronaut_left_2.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[4].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[4]);
+    if (!astronaut_2.astronaut_image[4].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
@@ -239,70 +239,70 @@ int images_innitialize() {
     }
 
 
-    astronaut_2[5].bitmap = al_load_bitmap("Images/astronaut_left_3.png");
-    al_convert_mask_to_alpha(astronaut_2[5].bitmap, WHITE);
-    calcBounds(astronaut_2[5]);
-    if (!astronaut_2[5].bitmap) {
+    astronaut_2.astronaut_image[5].bitmap = al_load_bitmap("Images/astronaut_left_3.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[5].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[5]);
+    if (!astronaut_2.astronaut_image[5].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[6].bitmap = al_load_bitmap("Images/astronaut_back_1.png");
-    al_convert_mask_to_alpha(astronaut_2[6].bitmap, WHITE);
-    calcBounds(astronaut_2[6]);
-    if (!astronaut_2[6].bitmap) {
+    astronaut_2.astronaut_image[6].bitmap = al_load_bitmap("Images/astronaut_back_1.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[6].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[6]);
+    if (!astronaut_2.astronaut_image[6].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[7].bitmap = al_load_bitmap("Images/astronaut_back_2.png");
-    al_convert_mask_to_alpha(astronaut_2[7].bitmap, WHITE);
-    calcBounds(astronaut_2[7]);
-    if (!astronaut_2[7].bitmap) {
+    astronaut_2.astronaut_image[7].bitmap = al_load_bitmap("Images/astronaut_back_2.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[7].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[7]);
+    if (!astronaut_2.astronaut_image[7].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[8].bitmap = al_load_bitmap("Images/astronaut_back_3.png");
-    al_convert_mask_to_alpha(astronaut_2[8].bitmap, WHITE);
-    calcBounds(astronaut_2[8]);
-    if (!astronaut_2[8].bitmap) {
+    astronaut_2.astronaut_image[8].bitmap = al_load_bitmap("Images/astronaut_back_3.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[8].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[8]);
+    if (!astronaut_2.astronaut_image[8].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_back_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[9].bitmap = al_load_bitmap("Images/astronaut_right_1.png");
-    al_convert_mask_to_alpha(astronaut_2[9].bitmap, WHITE);
-    calcBounds(astronaut_2[9]);
-    if (!astronaut_2[9].bitmap) {
+    astronaut_2.astronaut_image[9].bitmap = al_load_bitmap("Images/astronaut_right_1.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[9].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[9]);
+    if (!astronaut_2.astronaut_image[9].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_right_1)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[10].bitmap = al_load_bitmap("Images/astronaut_right_2.png");
-    al_convert_mask_to_alpha(astronaut_2[10].bitmap, WHITE);
-    calcBounds(astronaut_2[10]);
-    if (!astronaut_2[10].bitmap) {
+    astronaut_2.astronaut_image[10].bitmap = al_load_bitmap("Images/astronaut_right_2.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[10].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[10]);
+    if (!astronaut_2.astronaut_image[10].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_2)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
      	return -1;
     }
 
-    astronaut_2[11].bitmap = al_load_bitmap("Images/astronaut_right_3.png");
-    al_convert_mask_to_alpha(astronaut_2[11].bitmap, WHITE);
-    calcBounds(astronaut_2[11]);
-    if (!astronaut_2[11].bitmap) {
+    astronaut_2.astronaut_image[11].bitmap = al_load_bitmap("Images/astronaut_right_3.png");
+    al_convert_mask_to_alpha(astronaut_2.astronaut_image[11].bitmap, WHITE);
+    calcBounds(astronaut_2.astronaut_image[11]);
+    if (!astronaut_2.astronaut_image[11].bitmap) {
 		al_show_native_message_box(display, "Error", "Error", "Failed to load image (astronaut_left_3)!",
                                  nullptr, ALLEGRO_MESSAGEBOX_ERROR);
       	al_destroy_display(display);
